@@ -514,18 +514,35 @@ class ReactDrag extends Component {
 
   render() {
     const originalStyle = this.props.children.props.style;
-    const style = {
-      position: 'relative',
-      // Set top if vertical drag is enabled
-      top: canDragY(this)
-        ? this.state.pageY
-        : this.state.startY,
+    let style = {};
 
-        // Set left if horizontal drag is enabled
-      left: canDragX(this)
-        ? this.state.pageX
-        : this.state.startX
-    };
+    if (this.state.dragging) {
+      style = {
+        position: 'relative',
+        // Set top if vertical drag is enabled
+        top: canDragY(this)
+          ? this.state.pageY
+          : this.state.startY,
+
+          // Set left if horizontal drag is enabled
+        left: canDragX(this)
+          ? this.state.pageX
+          : this.state.startX
+      };
+    } else {
+      style = {
+        // position: 'relative',
+        // Set top if vertical drag is enabled
+        top: canDragY(this)
+          ? this.state.pageY
+          : this.state.startY,
+
+          // Set left if horizontal drag is enabled
+        left: canDragX(this)
+          ? this.state.pageX
+          : this.state.startX
+      };
+    }
 
     for (let s in originalStyle) {
       style[s] = originalStyle[s];
@@ -533,7 +550,7 @@ class ReactDrag extends Component {
 
     let className = CX({
       'react-drag': true,
-      'react-drag-dragging': this.state.dragging
+      // 'react-drag-dragging': this.state.dragging
     });
     const oldClass = this.props.children.props.className;
 
@@ -555,20 +572,6 @@ class ReactDrag extends Component {
     );
     // Reuse the child provided
     // This makes it flexible to use whatever element is wanted (div, ul, etc)
-    // return React.cloneElement(
-    //     React.Children.only(this.props.children), {
-    //   style: style,
-    //   className: className,
-
-    //   onMouseDown: this.handleDragStart,
-    //   onTouchStart: function (ev) {
-    //     ev.preventDefault(); // prevent for scroll
-    //     return this.handleDragStart.apply(this, arguments);
-    //   }.bind(this),
-
-    //   onMouseUp: this.handleDragEnd,
-    //   onTouchEnd: this.handleDragEnd
-    // });
   }
 };
 
