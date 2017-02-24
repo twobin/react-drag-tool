@@ -80,6 +80,7 @@ function matchesSelector(el, selector) {
 // @credits:
 // http://stackoverflow.com/questions/4817029/whats-the-best-way-to-detect-a-touch-screen-device-using-javascript/4819886#4819886
 /* Conditional to fix node server side rendering of component */
+let isTouchDevice = false;
 if (typeof window === 'undefined') {
     // Do Node Stuff
   let isTouchDevice = false;
