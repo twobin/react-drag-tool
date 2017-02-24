@@ -139,6 +139,7 @@ function getBoundPosition(pageX, pageY, bound, target) {
         (typeof bound !== 'object')) {
       console.warn('Bound should either "parent" or an object');
     }
+
     const par = target.parentNode;
     const topLimit = bound.top || 0;
     const leftLimit = bound.left || 0;
@@ -178,7 +179,7 @@ function removeEvent(el, event, handler) {
 }
 
 class ReactDrag extends Component {
-  static displayName = 'Draggable';
+  static displayName = 'redrag';
 
   static propTypes = {
     /**
@@ -402,8 +403,8 @@ class ReactDrag extends Component {
 
   componentWillUnmount() {
     // Remove any leftover event handlers
-    removeEvent(window, dragEventFor.move, this.handleDrag);
-    removeEvent(window, dragEventFor.end, this.handleDragEnd);
+    removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDragStart(e) {
@@ -442,8 +443,8 @@ class ReactDrag extends Component {
     this.props.onStart(e, createUIEvent(this));
 
     // Add event handlers
-    addEvent(window, dragEventFor.move, this.handleDrag);
-    addEvent(window, dragEventFor.end, this.handleDragEnd);
+    addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDragEnd(e) {
@@ -463,11 +464,12 @@ class ReactDrag extends Component {
     this.props.onStop(e, createUIEvent(this));
 
     // Remove event handlers
-    removeEvent(window, dragEventFor.move, this.handleDrag);
-    removeEvent(window, dragEventFor.end, this.handleDragEnd);
+    removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDrag(e) {
+    // Prevent the default behavior
     e.preventDefault();
 
     const dragPoint = getControlPosition(e);
@@ -508,14 +510,12 @@ class ReactDrag extends Component {
 
     // Call event handler
     this.props.onDrag(e, createUIEvent(this));
-
-    // Prevent the default behavior
-    e.preventDefault();
   }
 
   render() {
     const originalStyle = this.props.children.props.style;
     const style = {
+      position: 'relative',
       // Set top if vertical drag is enabled
       top: canDragY(this)
         ? this.state.pageY
@@ -526,14 +526,17 @@ class ReactDrag extends Component {
         ? this.state.pageX
         : this.state.startX
     };
+
     for (let s in originalStyle) {
       style[s] = originalStyle[s];
     }
+
     let className = CX({
       'react-drag': true,
       'react-drag-dragging': this.state.dragging
     });
     const oldClass = this.props.children.props.className;
+
     if (oldClass) {
       className = oldClass + ' ' + className;
     }
