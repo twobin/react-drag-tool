@@ -550,26 +550,28 @@ class ReactDrag extends Component {
       className = oldClass + ' ' + className;
     }
 
-    // return React.cloneElement(
-    //     React.Children.only(this.props.children), {
-    //   style: style,
-    //   className: className,
-    //   onMouseDown: this.handleDragStart.bind(this),
-    //   onMouseUp: this.handleDragEnd.bind(this)
-    // });
+    return React.cloneElement(
+        React.Children.only(this.props.children), {
+      style: style,
+      className: className,
+      onMouseDown: this.handleDragStart,
+      onMouseUp: this.handleDragEnd,
+      onTouchStart: this.handleDragStart,
+      onTouchEnd: this.handleDragEnd
+    });
 
-    return (
-      <div
-        className={className}
-        style={style}
-        onMouseDown={this.handleDragStart}
-        onTouchStart={this.handleDragStart}
-        onMouseUp={this.handleDragEnd}
-        onTouchEnd={this.handleDragEnd}
-      >
-        {this.props.children}
-      </div>
-    );
+    // return (
+    //   <div
+    //     className={className}
+    //     style={style}
+    //     onMouseDown={this.handleDragStart}
+    //     onTouchStart={this.handleDragStart}
+    //     onMouseUp={this.handleDragEnd}
+    //     onTouchEnd={this.handleDragEnd}
+    //   >
+    //     {this.props.children}
+    //   </div>
+    // );
     // Reuse the child provided
     // This makes it flexible to use whatever element is wanted (div, ul, etc)
   }
