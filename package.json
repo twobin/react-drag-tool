@@ -1,6 +1,6 @@
 {
   "name": "react-drag-tool",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "react drag and drop frame",
   "main": "lib/index.js",
   "scripts": {
@@ -22,7 +22,8 @@
   "keywords": [
     "react",
     "drag",
-    "drop"
+    "drop",
+    "tools"
   ],
   "repository": {
     "type": "git",
@@ -35,8 +36,7 @@
   "homepage": "https://github.com/twobin/react-drag-tool",
   "dependencies": {
     "react": "^15.4.0",
-    "react-dom": "^15.4.0",
-    "oui-dom-events": "^0.2.0"
+    "react-dom": "^15.4.0"
   },
   "files": [
     "src",
