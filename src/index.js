@@ -2,7 +2,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
-import Events from 'oui-dom-events';
 
 function classNames() {
   let classes = '';
@@ -181,7 +180,7 @@ function removeEvent(el, event, handler) {
   }
 }
 
-class ReactDrag extends Component {
+class ReactDragTool extends Component {
   static displayName = 'redrag';
 
   static propTypes = {
@@ -406,8 +405,6 @@ class ReactDrag extends Component {
 
   componentWillUnmount() {
     // Remove any leftover event handlers
-    // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
-    // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
     removeEvent(document, dragEventFor.move, this.handleDrag);
     removeEvent(document, dragEventFor.end, this.handleDragEnd);
   }
@@ -419,12 +416,7 @@ class ReactDrag extends Component {
     //     this.handleDragEnd.apply(e, arguments);
     //     return
     // }
-    e.preventDefault();
-
-    // Make it possible to attach event handlers on top of this one
-    this.props.onMouseDown(e);
-
-    const node = ReactDOM.findDOMNode(this);
+    // e.preventDefault();
 
     // Short circuit if handle or cancel prop was provided
     // and selector doesn't match
@@ -432,6 +424,11 @@ class ReactDrag extends Component {
       (this.props.cancel && matchesSelector(e.target, this.props.cancel))) {
       return;
     }
+
+    // Make it possible to attach event handlers on top of this one
+    this.props.onMouseDown(e);
+
+    const node = ReactDOM.findDOMNode(this);
 
     const dragPoint = getControlPosition(e);
 
@@ -448,8 +445,6 @@ class ReactDrag extends Component {
     this.props.onStart(e, createUIEvent(this));
 
     // Add event handlers
-    // Events.on(window, dragEventFor.move, this.handleDrag.bind(this));
-    // Events.on(window, dragEventFor.end, this.handleDragEnd.bind(this));
     addEvent(document, dragEventFor.move, this.handleDrag);
     addEvent(document, dragEventFor.end, this.handleDragEnd);
   };
@@ -471,8 +466,6 @@ class ReactDrag extends Component {
     this.props.onStop(e, createUIEvent(this));
 
     // Remove event handlers
-    // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
-    // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
     removeEvent(document, dragEventFor.move, this.handleDrag);
     removeEvent(document, dragEventFor.end, this.handleDragEnd);
   };
@@ -524,7 +517,7 @@ class ReactDrag extends Component {
   render() {
     const originalStyle = this.props.children.props.style;
     let style = {
-      position: 'relative',
+      position: 'absolute',
       // Set top if vertical drag is enabled
       top: canDragY(this)
         ? this.state.pageY
@@ -541,8 +534,8 @@ class ReactDrag extends Component {
     }
 
     let className = CX({
-      'react-drag': true,
-      'react-drag-dragging': this.state.dragging
+      'react-drag-tool': true,
+      'react-drag-tool-dragging': this.state.dragging
     });
     const oldClass = this.props.children.props.className;
 
@@ -559,22 +552,9 @@ class ReactDrag extends Component {
       onTouchStart: this.handleDragStart,
       onTouchEnd: this.handleDragEnd
     });
-
-    // return (
-    //   <div
-    //     className={className}
-    //     style={style}
-    //     onMouseDown={this.handleDragStart}
-    //     onTouchStart={this.handleDragStart}
-    //     onMouseUp={this.handleDragEnd}
-    //     onTouchEnd={this.handleDragEnd}
-    //   >
-    //     {this.props.children}
-    //   </div>
-    // );
     // Reuse the child provided
     // This makes it flexible to use whatever element is wanted (div, ul, etc)
   }
 };
 
-export default ReactDrag;
+export default ReactDragTool;

@@ -1,6 +1,6 @@
 {
-  "name": "redrag",
-  "version": "0.0.8",
+  "name": "react-drag-tool",
+  "version": "0.0.1",
   "description": "react drag and drop frame",
   "main": "lib/index.js",
   "scripts": {
@@ -26,13 +26,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/twobin/redrag.git"
+    "url": "https://github.com/twobin/react-drag-tool.git"
   },
   "author": "twobin",
   "bugs": {
-    "url": "https://github.com/twobin/redrag/issues"
+    "url": "https://github.com/twobin/react-drag-tool/issues"
   },
-  "homepage": "https://github.com/twobin/redrag",
+  "homepage": "https://github.com/twobin/react-drag-tool",
   "dependencies": {
     "react": "^15.4.0",
     "react-dom": "^15.4.0",
