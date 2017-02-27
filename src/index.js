@@ -2,6 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import Events from 'oui-dom-events';
 
 function classNames() {
   let classes = '';
@@ -403,8 +404,10 @@ class ReactDrag extends Component {
 
   componentWillUnmount() {
     // Remove any leftover event handlers
-    removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
+    Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    // removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDragStart(e) {
@@ -443,8 +446,10 @@ class ReactDrag extends Component {
     this.props.onStart(e, createUIEvent(this));
 
     // Add event handlers
-    addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    Events.on(window, dragEventFor.move, this.handleDrag.bind(this));
+    Events.on(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    // addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDragEnd(e) {
@@ -464,8 +469,10 @@ class ReactDrag extends Component {
     this.props.onStop(e, createUIEvent(this));
 
     // Remove event handlers
-    removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
+    Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    // removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDrag(e) {
@@ -514,35 +521,18 @@ class ReactDrag extends Component {
 
   render() {
     const originalStyle = this.props.children.props.style;
-    let style = {};
+    let style = {
+      position: 'relative',
+      // Set top if vertical drag is enabled
+      top: canDragY(this)
+        ? this.state.pageY
+        : this.state.startY,
 
-    if (this.state.dragging) {
-      style = {
-        position: 'relative',
-        // Set top if vertical drag is enabled
-        top: canDragY(this)
-          ? this.state.pageY
-          : this.state.startY,
-
-          // Set left if horizontal drag is enabled
-        left: canDragX(this)
-          ? this.state.pageX
-          : this.state.startX
-      };
-    } else {
-      style = {
-        // position: 'relative',
-        // Set top if vertical drag is enabled
-        top: canDragY(this)
-          ? this.state.pageY
-          : this.state.startY,
-
-          // Set left if horizontal drag is enabled
-        left: canDragX(this)
-          ? this.state.pageX
-          : this.state.startX
-      };
-    }
+        // Set left if horizontal drag is enabled
+      left: canDragX(this)
+        ? this.state.pageX
+        : this.state.startX
+    };
 
     for (let s in originalStyle) {
       style[s] = originalStyle[s];
@@ -550,7 +540,7 @@ class ReactDrag extends Component {
 
     let className = CX({
       'react-drag': true,
-      // 'react-drag-dragging': this.state.dragging
+      'react-drag-dragging': this.state.dragging
     });
     const oldClass = this.props.children.props.className;
 

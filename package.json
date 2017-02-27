@@ -1,6 +1,6 @@
 {
   "name": "redrag",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "react drag and drop frame",
   "main": "lib/index.js",
   "scripts": {
@@ -35,7 +35,8 @@
   "homepage": "https://github.com/twobin/redrag",
   "dependencies": {
     "react": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react-dom": "^15.4.0",
+    "oui-dom-events": "^0.2.0"
   },
   "files": [
     "src",
