@@ -1,6 +1,6 @@
 {
   "name": "redrag",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "react drag and drop frame",
   "main": "lib/index.js",
   "scripts": {

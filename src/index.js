@@ -159,10 +159,11 @@ function getBoundPosition(pageX, pageY, bound, target) {
 
 function addEvent(el, event, handler) {
   if (!el) { return; }
-  if (el.attachEvent) {
+
+  if (el.addEventListener) {
+    el.addEventListener(event, handler, false);
+  } else if (el.attachEvent) {
     el.attachEvent('on' + event, handler);
-  } else if (el.addEventListener) {
-    el.addEventListener(event, handler, true);
   } else {
     el['on' + event] = handler;
   }
@@ -170,10 +171,11 @@ function addEvent(el, event, handler) {
 
 function removeEvent(el, event, handler) {
   if (!el) { return; }
-  if (el.detachEvent) {
+
+  if (el.removeEventListener) {
+    el.removeEventListener(event, handler, false);
+  } else if (el.detachEvent) {
     el.detachEvent('on' + event, handler);
-  } else if (el.removeEventListener) {
-    el.removeEventListener(event, handler, true);
   } else {
     el['on' + event] = null;
   }
@@ -406,11 +408,11 @@ class ReactDrag extends Component {
     // Remove any leftover event handlers
     // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
     // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    removeEvent(window, dragEventFor.move, this.handleDrag);
-    removeEvent(window, dragEventFor.end, this.handleDragEnd);
+    removeEvent(document, dragEventFor.move, this.handleDrag);
+    removeEvent(document, dragEventFor.end, this.handleDragEnd);
   }
 
-  handleDragStart(e) {
+  handleDragStart = (e) => {
     // todo: write right implementation to prevent multitouch drag
     // prevent multi-touch events
     // if (isMultiTouch(e)) {
@@ -448,11 +450,11 @@ class ReactDrag extends Component {
     // Add event handlers
     // Events.on(window, dragEventFor.move, this.handleDrag.bind(this));
     // Events.on(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
-  }
+    addEvent(document, dragEventFor.move, this.handleDrag);
+    addEvent(document, dragEventFor.end, this.handleDragEnd);
+  };
 
-  handleDragEnd(e) {
+  handleDragEnd = (e) => {
     // Short circuit if not currently dragging
     e.preventDefault();
 
@@ -471,11 +473,11 @@ class ReactDrag extends Component {
     // Remove event handlers
     // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
     // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    removeEvent(window, dragEventFor.move, this.handleDrag);
-    removeEvent(window, dragEventFor.end, this.handleDragEnd);
-  }
+    removeEvent(document, dragEventFor.move, this.handleDrag);
+    removeEvent(document, dragEventFor.end, this.handleDragEnd);
+  };
 
-  handleDrag(e) {
+  handleDrag = (e) => {
     // Prevent the default behavior
     e.preventDefault();
 
@@ -517,7 +519,7 @@ class ReactDrag extends Component {
 
     // Call event handler
     this.props.onDrag(e, createUIEvent(this));
-  }
+  };
 
   render() {
     const originalStyle = this.props.children.props.style;
@@ -548,26 +550,26 @@ class ReactDrag extends Component {
       className = oldClass + ' ' + className;
     }
 
-    return React.cloneElement(
-        React.Children.only(this.props.children), {
-      style: style,
-      className: className,
-      onMouseDown: this.handleDragStart.bind(this),
-      onMouseUp: this.handleDragEnd.bind(this)
-    });
+    // return React.cloneElement(
+    //     React.Children.only(this.props.children), {
+    //   style: style,
+    //   className: className,
+    //   onMouseDown: this.handleDragStart.bind(this),
+    //   onMouseUp: this.handleDragEnd.bind(this)
+    // });
 
-    // return (
-    //   <div
-    //     className={className}
-    //     style={style}
-    //     onMouseDown={::this.handleDragStart}
-    //     onTouchStart={::this.handleDragStart}
-    //     onMouseUp={::this.handleDragEnd}
-    //     onTouchEnd={::this.handleDragEnd}
-    //   >
-    //     {this.props.children}
-    //   </div>
-    // );
+    return (
+      <div
+        className={className}
+        style={style}
+        onMouseDown={this.handleDragStart}
+        onTouchStart={this.handleDragStart}
+        onMouseUp={this.handleDragEnd}
+        onTouchEnd={this.handleDragEnd}
+      >
+        {this.props.children}
+      </div>
+    );
     // Reuse the child provided
     // This makes it flexible to use whatever element is wanted (div, ul, etc)
   }
