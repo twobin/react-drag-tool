@@ -404,10 +404,10 @@ class ReactDrag extends Component {
 
   componentWillUnmount() {
     // Remove any leftover event handlers
-    Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
-    Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    // removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    // removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
+    // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    removeEvent(window, dragEventFor.move, this.handleDrag);
+    removeEvent(window, dragEventFor.end, this.handleDragEnd);
   }
 
   handleDragStart(e) {
@@ -446,10 +446,10 @@ class ReactDrag extends Component {
     this.props.onStart(e, createUIEvent(this));
 
     // Add event handlers
-    Events.on(window, dragEventFor.move, this.handleDrag.bind(this));
-    Events.on(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    // addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    // addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // Events.on(window, dragEventFor.move, this.handleDrag.bind(this));
+    // Events.on(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    addEvent(window, dragEventFor.move, this.handleDrag.bind(this));
+    addEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
   }
 
   handleDragEnd(e) {
@@ -469,10 +469,10 @@ class ReactDrag extends Component {
     this.props.onStop(e, createUIEvent(this));
 
     // Remove event handlers
-    Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
-    Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
-    // removeEvent(window, dragEventFor.move, this.handleDrag.bind(this));
-    // removeEvent(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    // Events.off(window, dragEventFor.move, this.handleDrag.bind(this));
+    // Events.off(window, dragEventFor.end, this.handleDragEnd.bind(this));
+    removeEvent(window, dragEventFor.move, this.handleDrag);
+    removeEvent(window, dragEventFor.end, this.handleDragEnd);
   }
 
   handleDrag(e) {
@@ -548,18 +548,26 @@ class ReactDrag extends Component {
       className = oldClass + ' ' + className;
     }
 
-    return (
-      <div
-        className={className}
-        style={style}
-        onMouseDown={::this.handleDragStart}
-        onTouchStart={::this.handleDragStart}
-        onMouseUp={::this.handleDragEnd}
-        onTouchEnd={::this.handleDragEnd}
-      >
-        {this.props.children}
-      </div>
-    );
+    return React.cloneElement(
+        React.Children.only(this.props.children), {
+      style: style,
+      className: className,
+      onMouseDown: this.handleDragStart.bind(this),
+      onMouseUp: this.handleDragEnd.bind(this)
+    });
+
+    // return (
+    //   <div
+    //     className={className}
+    //     style={style}
+    //     onMouseDown={::this.handleDragStart}
+    //     onTouchStart={::this.handleDragStart}
+    //     onMouseUp={::this.handleDragEnd}
+    //     onTouchEnd={::this.handleDragEnd}
+    //   >
+    //     {this.props.children}
+    //   </div>
+    // );
     // Reuse the child provided
     // This makes it flexible to use whatever element is wanted (div, ul, etc)
   }
