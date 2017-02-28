@@ -404,11 +404,21 @@ class ReactDragTool extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.start !== nextProps.start) {
+    if (!this.props.start && nextProps.start) {
       this.setState({
         pageX: nextProps.start.x,
-        pageY: nextProps.start.y,
+        pageY: nextProps.start.y
       });
+    }
+
+    if (this.props.start && nextProps.start) {
+      if ((this.props.start.x !== nextProps.start.x) ||
+        (this.props.start.y !== nextProps.start.y)) {
+        this.setState({
+          pageX: nextProps.start.x,
+          pageY: nextProps.start.y
+        });
+      }
     }
   }
 
