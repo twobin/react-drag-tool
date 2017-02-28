@@ -403,6 +403,15 @@ class ReactDragTool extends Component {
     };
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.start !== nextProps.start) {
+      this.setState({
+        pageX: nextProps.start.x,
+        pageY: nextProps.start.y,
+      });
+    }
+  }
+
   componentWillUnmount() {
     // Remove any leftover event handlers
     removeEvent(document, dragEventFor.move, this.handleDrag);
@@ -442,32 +451,13 @@ class ReactDragTool extends Component {
     });
 
     // Call event handler
-    this.props.onStart(e, createUIEvent(this));
+    if (this.props.onStart) {
+      this.props.onStart(e, createUIEvent(this));
+    }
 
     // Add event handlers
     addEvent(document, dragEventFor.move, this.handleDrag);
     addEvent(document, dragEventFor.end, this.handleDragEnd);
-  };
-
-  handleDragEnd = (e) => {
-    // Short circuit if not currently dragging
-    e.preventDefault();
-
-    if (!this.state.dragging) {
-      return;
-    }
-
-    // Turn off dragging
-    this.setState({
-      dragging: false
-    });
-
-    // Call event handler
-    this.props.onStop(e, createUIEvent(this));
-
-    // Remove event handlers
-    removeEvent(document, dragEventFor.move, this.handleDrag);
-    removeEvent(document, dragEventFor.end, this.handleDragEnd);
   };
 
   handleDrag = (e) => {
@@ -511,7 +501,32 @@ class ReactDragTool extends Component {
     });
 
     // Call event handler
-    this.props.onDrag(e, createUIEvent(this));
+    if (this.props.onDrag) {
+      this.props.onDrag(e, createUIEvent(this));
+    }
+  };
+
+  handleDragEnd = (e) => {
+    // Short circuit if not currently dragging
+    e.preventDefault();
+
+    if (!this.state.dragging) {
+      return;
+    }
+
+    // Turn off dragging
+    this.setState({
+      dragging: false
+    });
+
+    // Call event handler
+    if (this.props.onStop) {
+      this.props.onStop(e, createUIEvent(this));
+    }
+
+    // Remove event handlers
+    removeEvent(document, dragEventFor.move, this.handleDrag);
+    removeEvent(document, dragEventFor.end, this.handleDragEnd);
   };
 
   render() {

@@ -1,7 +1,7 @@
 {
   "name": "react-drag-tool",
-  "version": "0.0.2",
-  "description": "react drag and drop frame",
+  "version": "0.0.3",
+  "description": "react drag and drop tools",
   "main": "lib/index.js",
   "scripts": {
     "dev": "babel src --out-dir lib -w",
