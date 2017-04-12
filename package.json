@@ -1,6 +1,6 @@
 {
   "name": "react-drag-tool",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "react drag and drop tools",
   "main": "lib/index.js",
   "scripts": {
@@ -35,8 +35,8 @@
   },
   "homepage": "https://github.com/twobin/react-drag-tool",
   "dependencies": {
-    "react": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react": "~15.4.0",
+    "react-dom": "~15.4.0"
   },
   "files": [
     "src",
